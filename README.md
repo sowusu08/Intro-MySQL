@@ -29,15 +29,12 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 ## Access MySql  
 > [Diagram. How access is controlled](https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html)  
 
-* __open MySql shell__
+* __open MySql shell__  
 _shell>>_ `sudo -i`  
-_shell>>_ `mysql -u root`
-
-<br/><br/>
+_shell>>_ `mysql -u root`  
 _If error install mysql:_  
-_shell>>_ `apt install -y mysql-server`
-_shell>>_ `mysql -u root`
-<br/><br/>
+_shell>>_ `apt install -y mysql-server`  
+_shell>>_ `mysql -u root`  
 
 * __check that no password is set__  
 _mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
