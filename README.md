@@ -23,20 +23,20 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
   * Manage VM: *https://vcm.duke.edu/*
 
 <a name='unit1'></a>
-## Unit 1: Access control / User management
+## Open MySql
   * how access is controlled (https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html )  
-	`_shell>>_ sudo -i`  
-  	`_shell>>_ mysql -u root`
+	_shell>>_ `sudo -i`  
+  	_shell>>_ `mysql -u root`
 
-	\[<br/><br/>
-	__NOTE that MySQL may not be installed.  If an error is encountered here, install mysql with:__
+	<br/><br/>
+	__If mysql not installed:__  
+	_shell>>_ `apt install -y mysql-server`
 	
-	_shell>>_ apt install -y mysql-server
-	
-	_shell>>_ mysql -u root *(_NO INITIAL PASSWORD EXISTS_)*
-	<br/><br/>\]
+	_shell>>_ `mysql -u root`
+	<br/><br/>
 
-	_mysql>>_ SELECT Host, User, plugin, authentication_string from mysql.user where User='root';
+	_mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
+	_shows no password set_
 
 	| Host      | User | plugin      | authentication\_string |
 	|:----------|:-----|:------------|:-----------------------|
@@ -55,10 +55,6 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 		(e.g. use mysql;)
 
 	_mysql>>_ show tables;
-	  	
-	*TAB COMPLETION*
-	
-	*COMMAND HISTORY*
 
 
 
