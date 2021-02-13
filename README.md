@@ -5,82 +5,76 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 
 **Table of Contents**
 
-1. [Lab 0: Creating a Personal Linux VM](#lab0)
-2. [Unit 1: Access control / User management](#unit1)
-3. [Lab 1: Initial user lockdown](#lab1)
-4. [Unit 2: Databases, schema](#unit2)
-5. [Unit 3: Adding/modifying tables and indexes](#unit3)
-6. [Lab 2/3: Working with databases and tables](#lab2/3)
-7. [Unit 4: Populating database with data](#unit4)
-8. [Lab 4: Adding data to your database](#lab4)
-9. [Unit 5: Writing queries to retrieve data](#unit5)
-10. [Lab 5: Practice with INSERT, UPDATE, DELETE, and SELECT (with JOIN!)](#lab5)
-11. [Unit 6: Useful ancillary information](#unit6)
+1. [Personal Linux VM](#vm)
+2. [Access mySQL](#access-shell)
+3. [Add password to DBMS](#password)
+4. [Check structure of DBMS](#check-structure)
 
-<a name='lab0'></a>
+
+4. [Unit 2: Databases, schema](#)
+5. [Unit 3: Adding/modifying tables and indexes](#)
+6. [Lab 2/3: Working with databases and tables](#)
+7. [Unit 4: Populating database with data](#)
+8. [Lab 4: Adding data to your database](#)
+9. [Unit 5: Writing queries to retrieve data](#)
+10. [Lab 5: Practice with INSERT, UPDATE, DELETE, and SELECT (with JOIN!)](#)
+11. [Unit 6: Useful ancillary information](#)
+
+<a name='vm'></a>
 ## Personal Linux VM
   * A brief tangent to discuss architecture: https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/client-server-architecture.pdf  
-  * Manage VM: *https://vcm.duke.edu/*
+  * Manage VM: *https://vcm.duke.edu/*  
 
-<a name='unit1'></a>
-## Open MySql
-  * how access is controlled (https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html )  
-	_shell>>_ `sudo -i`  
-  	_shell>>_ `mysql -u root`
+<a name='access-shell'></a>
+## Access MySql  
+> [Diagram. How access is controlled](https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html)  
 
-	<br/><br/>
-	__If mysql not installed:__  
-	_shell>>_ `apt install -y mysql-server`
-	
-	_shell>>_ `mysql -u root`
-	<br/><br/>
+* __open MySql shell__
+_shell>>_ `sudo -i`  
+_shell>>_ `mysql -u root`
 
-	_mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
-	_shows no password set_
+<br/><br/>
+_If error install mysql:_  
+_shell>>_ `apt install -y mysql-server`
+_shell>>_ `mysql -u root`
+<br/><br/>
 
-	| Host      | User | plugin      | authentication\_string |
-	|:----------|:-----|:------------|:-----------------------|
-	| localhost | root | auth_socket |                        |
+* __check that no password is set__  
+_mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
 
-	
-  * general structure of the DBMS
+_Returns:_
+| Host      | User | plugin      | authentication\_string |
+|:----------|:-----|:------------|:-----------------------|
+| localhost | root | auth_socket |                        |  
+
+
+<a name='password'></a>
+## Add password
+* Login to MySQL as 'root', change that user's password  
   
-	_mysql>>_ status
+_mysql>>_ `update mysql.user set plugin='mysql_native_password' where user='root' and host='localhost';`  
+_mysql>>_ `flush privileges;`  
+_mysql>>_ `SET PASSWORD FOR 'root'@'localhost' = '<PASSWORD>';`  
+<br></br>
 
-	_mysql>>_ show status;
-
-	_mysql>>_ show databases;
-
-	_mysql>>_ use *DATABASE*;
-		(e.g. use mysql;)
-
-	_mysql>>_ show tables;
+* __check that password is set__
+_mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
 
 
+<a name='check-structure'></a>
+## Check structure of DBMS
+_mysql>>_ `status;`  
+_mysql>>_ `show status;`  
 
-<a name='lab1'></a>
-## Lab 1 - Initial user lockdown
+_mysql>>_ `show databases;` to see available databases on server  
 
-  * Login to MySQL as 'root', change that user's password, and remove unnecessary authorizations
-  
-  	_shell>>_ sudo -i
+_mysql>>_ `use <DATABASE>;` to see structure of database (e.g. use mysql;)  
 
-  	_shell>>_ mysql -u root *(_NO INITIAL PASSWORD EXISTS_)*
-
-	_mysql>>_ update mysql.user set plugin='mysql_native_password' where user='root' and host='localhost';
-
-	_mysql>>_ flush privileges;
-
-	_mysql>>_ SET PASSWORD FOR 'root'@'localhost' = '_SUPER\_GREAT\_PASSWORD\_HERE_';
-
-	_mysql>>_ SELECT Host, User, plugin, authentication_string from mysql.user where User='root';
-	
-		[take note of how this output looks different than it did before]
-	
-	_mysql>>_ SELECT Host, User, plugin, authentication_string from mysql.user;
+_mysql>>_ `show tables;`  to see tables in selected database  
 
 
-<a name='unit2'></a>
+
+
 ## Unit 2: Databases, schema
   * Removing or creating databases is very simple
   
