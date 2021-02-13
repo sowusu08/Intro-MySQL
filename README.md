@@ -1,13 +1,7 @@
-Introduction to MySQL (aka "Working with mySQL")
+Intro to MySQL 
 =====================
 
-*Version 10, 2021-01-27*
-
-*https://github.com/LinuxAtDuke/Intro-to-MySQL/*
-
-**Instructor**
-
-Andy Ingham (andy.ingham AT duke.edu)
+Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_how_to_practice_your_mysql/*  
 
 **Table of Contents**
 
@@ -24,30 +18,15 @@ Andy Ingham (andy.ingham AT duke.edu)
 11. [Unit 6: Useful ancillary information](#unit6)
 
 <a name='lab0'></a>
-## Lab 0 - Creating a personal Linux VM
-
-  * A brief tangent to discuss architecture == https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/client-server-architecture.pdf
-
-
-1. Using a web browser, go to *https://vcm.duke.edu/*
-2. Login using your Duke NetId.
-3. Select "Reserve a VM" (near the middle of the page)
-4. On the next screen, select the "Lamp Stack" link from the list under "Linux Apps"
-5. If you encounter a pop-up window about SSH keys (which displays if you do not have them set up for your netID), you may need to select the less secure option until you've done that step (which is outside the scope of this class).
-6. After agreeing to the Terms of Use, the VCM web page will display the name of your VM along with available usernames. __You must first connect to the University VPN (if not "on campus"), THEN initiate an ssh session as the Admin User (vcm) -- do this via the "Terminal" app on your Mac or via "PuTTY" (available at https://www.chiark.greenend.org.uk/~sgtatham/putty/ ) on your Windows machine.__
-		  
-*Example (after establishing a University VPN session, if off campus):* `ssh vcm@vcm-1473.vm.duke.edu` [Answering "yes" to "Are you sure you want to continue connecting (yes/no)?" and then entering the password behind "View Password" when prompted]
-
-
+## Personal Linux VM
+  * A brief tangent to discuss architecture: https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/client-server-architecture.pdf  
+  * Manage VM: *https://vcm.duke.edu/*
 
 <a name='unit1'></a>
 ## Unit 1: Access control / User management
-
-  * how access is controlled (https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html )
-  
-  	_shell>>_ sudo -i
-
-  	_shell>>_ mysql -u root *(_NO INITIAL PASSWORD EXISTS_)*
+  * how access is controlled (https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html )  
+	`_shell>>_ sudo -i`  
+  	`_shell>>_ mysql -u root`
 
 	\[<br/><br/>
 	__NOTE that MySQL may not be installed.  If an error is encountered here, install mysql with:__
