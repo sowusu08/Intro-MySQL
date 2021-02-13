@@ -10,16 +10,6 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 3. [Add password to DBMS](#password)
 4. [Check structure of DBMS](#check-structure)
 
-
-4. [Unit 2: Databases, schema](#)
-5. [Unit 3: Adding/modifying tables and indexes](#)
-6. [Lab 2/3: Working with databases and tables](#)
-7. [Unit 4: Populating database with data](#)
-8. [Lab 4: Adding data to your database](#)
-9. [Unit 5: Writing queries to retrieve data](#)
-10. [Lab 5: Practice with INSERT, UPDATE, DELETE, and SELECT (with JOIN!)](#)
-11. [Unit 6: Useful ancillary information](#)
-
 <a name='vm'></a>
 ## Personal Linux VM
   * A brief tangent to discuss architecture: https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/client-server-architecture.pdf  
