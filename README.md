@@ -33,18 +33,13 @@ _shell>>_ `mysql -u root`
 
 <a name='check-structure'></a>
 ## Check structure of DBMS
-_mysql>>_ `status;`  for general info including current database
-
+_mysql>>_ `status;`  for general info including current database and current user  
 _mysql>>_ `show databases;` to see available databases on server  
-
-_mysql>>_ `use <DATABASE>;` to access a database (e.g. use mysql;)  
-
-_mysql>>_ `show tables;`  to see tables in selected database  
 
 
 <a name='password'></a>
 ## Add password
-* __check that no password is set__  
+1. __check that no password is set__  
 _mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
 
 _Returns:_
@@ -53,55 +48,23 @@ _Returns:_
 | localhost | root | auth_socket |                        |  
 
 
-* __change root user's password__  
+2. __change root user's password__  
 _mysql>>_ `update mysql.user set plugin='mysql_native_password' where user='root' and host='localhost';`  
 _mysql>>_ `flush privileges;`  
 _mysql>>_ `SET PASSWORD FOR 'root'@'localhost' = '<PASSWORD>';`  
-<br></br>
 
-* __check that password is set__
+3. __check that password is set__
 _mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
 
 
 ## Unit 2: Databases, schema
-  * Removing or creating databases is very simple
-  
-	_mysql>>_ CREATE DATABASE colab_class;
+  * Removing or creating databases  
+_mysql>>_ `CREATE DATABASE <NEW_DATABASE>;` creates database  
+_mysql>>_ `DROP DATABASE <DATABASE>;` removes database  
 
-	_mysql>>_ show databases;
-	
-	_mysql>>_ DROP DATABASE colab_class;
-	
-	_mysql>>_ show databases;
-	
-  * Schema development is best done via an ER diagram and/or a whiteboard - consider these:
-	- what are the entities? _(the "things" or "concepts" that form the basis of our data)_
-	- what relationships do they have with one another?
-	- what are the important attributes of the entities?
-	- what are the data types and metadata _(is NULL allowed? are there default values?)_ for those attributes?
-	- what will determine uniqueness in each table? _(will the primary key be simple or compound?)_
-	- what queries are users likely to run? _(this will inform index creation)_
-	- what indexes are needed? _(to supplement the primary key)_	
-	
- * Some (albeit simple and somewhat silly) examples:
-	- https://www.edrawsoft.com/templates/pdf/pet-store-er-diagram.pdf
-		- https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/pet-store-example-schemaOwner.pdf
-		- https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/pet-store-example-schemaPet.pdf
-		- https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/pet-store-example-schemaPetClinic.pdf
-		- ESPECIALLY PROBLEMATIC: https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/pet-store-example-schemaTreatments.pdf
-		- IN LIGHT OF THE ABOVE: https://dzone.com/articles/how-to-handle-a-many-to-many-relationship-in-datab
-		- https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/pet-store-example-schemaPetStore.pdf
-	- https://www.safaribooksonline.com/library/view/learning-mysql/0596008643/ch04s04.html
-
-  * A tutorial to help with schema development:
-  	- http://www.anchor.com.au/hosting/support/CreatingAQuickMySQLRelationalDatabase
-
-  * Fine-tuning of schema...
-	- referential integrity - data types consistent across linking fields (foreign keys)
-	- data types (https://dev.mysql.com/doc/refman/8.0/en/data-types.html) should be as prescriptive and compact as possible
-	- index creation should be done where needed, but not elsewhere
-	- index creation is always faster BEFORE data is loaded into the table
-	- verify that data is "reasonably" normalized (e.g., data generally de-duplicated)
+  * Accessing databases  
+_mysql>>_ `use <DATABASE>;` to access a database (e.g. use mysql;)  
+_mysql>>_ `show tables;`  to see tables in selected database  
 
   * Some examples
   
