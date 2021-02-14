@@ -6,9 +6,9 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 **Table of Contents**
 
 1. [Personal Linux VM](#vm)
-2. [Access mySQL](#access-shell)
-3. [Add password to DBMS](#password)
-4. [Check structure of DBMS](#check-structure)
+2. [Check structure of DBMS](#check-structure)
+3. [Access mySQL](#access-shell)
+4. [Add password to DBMS](#password)
 
 <a name='vm'></a>
 ## Personal Linux VM
@@ -17,15 +17,33 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 
 <a name='access-shell'></a>
 ## Access MySql  
-> [Diagram. How access is controlled](https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html)  
+> Documentation. How access is controlled: https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html  
 
-* __open MySql shell__  
+1. __connect to VM__  
+_shell>>_ `ssh spo8@<VMhostname>`  
+_shell>>_ `<NetID pswd>`
+
+2. __open MySql shell__  
 _shell>>_ `sudo -i`  
 _shell>>_ `mysql -u root`  
-_If error install mysql:_  
+
+* _If error install mysql first:_  
 _shell>>_ `apt install -y mysql-server`  
 _shell>>_ `mysql -u root`  
 
+<a name='check-structure'></a>
+## Check structure of DBMS
+_mysql>>_ `status;`  for general info including current database
+
+_mysql>>_ `show databases;` to see available databases on server  
+
+_mysql>>_ `use <DATABASE>;` to access a database (e.g. use mysql;)  
+
+_mysql>>_ `show tables;`  to see tables in selected database  
+
+
+<a name='password'></a>
+## Add password
 * __check that no password is set__  
 _mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
 
@@ -35,10 +53,7 @@ _Returns:_
 | localhost | root | auth_socket |                        |  
 
 
-<a name='password'></a>
-## Add password
-* Login to MySQL as 'root', change that user's password  
-  
+* __change root user's password__  
 _mysql>>_ `update mysql.user set plugin='mysql_native_password' where user='root' and host='localhost';`  
 _mysql>>_ `flush privileges;`  
 _mysql>>_ `SET PASSWORD FOR 'root'@'localhost' = '<PASSWORD>';`  
@@ -46,20 +61,6 @@ _mysql>>_ `SET PASSWORD FOR 'root'@'localhost' = '<PASSWORD>';`
 
 * __check that password is set__
 _mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
-
-
-<a name='check-structure'></a>
-## Check structure of DBMS
-_mysql>>_ `status;`  
-_mysql>>_ `show status;`  
-
-_mysql>>_ `show databases;` to see available databases on server  
-
-_mysql>>_ `use <DATABASE>;` to see structure of database (e.g. use mysql;)  
-
-_mysql>>_ `show tables;`  to see tables in selected database  
-
-
 
 
 ## Unit 2: Databases, schema
