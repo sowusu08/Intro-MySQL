@@ -59,15 +59,16 @@ _mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user wher
 
 ## Unit 2: Databases, schema
   * Removing or creating databases  
-_mysql>>_ `CREATE DATABASE <NEW_DATABASE>;` creates database  
-_mysql>>_ `DROP DATABASE <DATABASE>;` removes database  
+_mysql>>_ `CREATE DATABASE <new_database>;` creates database  
+_mysql>>_ `DROP DATABASE <database_name>;` removes database  
 
   * Accessing databases  
-_mysql>>_ `use <DATABASE>;` to access a database (e.g. use mysql;)  
+_mysql>>_ `use <database_name>;` to access a database   
 _mysql>>_ `show tables;`  to see tables in selected database  
 
-  * Some examples
-  
+  * Viewing tables
+_mysql>>_ `describe <table_name>;` to display a table in selected database  
+  _Return example:_
 	_mysql>>_ describe LCL_genotypes;
 
 	| Field    | Type         | Null | Key | Default | Extra |
@@ -103,9 +104,23 @@ _mysql>>_ `show tables;`  to see tables in selected database
 
 
 <a name='unit3'></a>
-## Unit 3: Adding/modifying tables and indexes
+## Adding/modifying tables and indexes
+* creating table  
+_mysql>>_ 
+```
+CREATE TABLE `<table_name>` (
+`<field1_name>` <field1_datatype> <NULL or NOT NULL>,
+`<field2_name>` <field2_datatype> <NULL or NOT NULL>,
+...
+PRIMARY KEY (`<field_that_is_primary>`, `<field_that_is_primary>`...),
+KEY `idx_<field_used_for_index>` (<field_used_for_index>)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+```  
 
-  * Looking at the syntax for creating the above tables...
+* adding index  
+_mysql>>_ `CREATE INDEX idx_<fieldname> ON <table_name>(<fieldname>);` creates index based on chosen field  
+
+* Looking at the syntax for creating the above tables...
 
 		CREATE TABLE `LCL_genotypes` (
 		`IID` varchar(16) NOT NULL,
@@ -126,17 +141,7 @@ _mysql>>_ `show tables;`  to see tables in selected database
 		PRIMARY KEY (`lcl_ID`,`phenotype`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-		CREATE TABLE `snp` (
-		`rsID` varchar(256) NOT NULL,
-		`Chromosome` bigint(20) unsigned NOT NULL,
-		`Position` int(10) unsigned NOT NULL,
-		`Allele1` varchar(1024) NOT NULL,
-		`Allele2` varchar(1024) NOT NULL,
-		`DistanceToNearGene` varchar(1024) NOT NULL,
-		`Gene` varchar(256) NOT NULL,
-		`SNPtype` varchar(64) NOT NULL,
-		PRIMARY KEY (`rsID`)
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+		
 
   * How was the "idx_rsID" index actually created?
   
