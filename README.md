@@ -16,7 +16,9 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 	* [Adding index](#adding-index-to-table)  
 	* [Altering tables](#altering-table-schema)
 7. [Load database structure](#load-schema)
-8. [Load data into tables](#load-data)
+8. [Populate tables](#load-data)  
+9. [Querying records](#querying-records)  
+10. [Check for warnings](#check-for-warnings)
 
 <a name='vm'></a>
 ## Personal Linux VM
@@ -27,7 +29,7 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 ## Access MySql  
 
 1. __connect to VM__  
-_shell>>_ `ssh spo8@<VMhostname>`  
+_shell>>_ `ssh NetID@<VMhostname>`  
 _shell>>_ `<NetID pswd>`
 
 2. __open MySql shell__  
@@ -97,9 +99,9 @@ _mysql>>_ `describe <table_name>;` to display a table in selected database
   ### Creating tables  
 _mysql>>_ 
 ```
-CREATE TABLE `<table_name>` (
-`<field1_name>` <field1_datatype> <can field be NULL or NOT NULL>,
-`<field2_name>` <field2_datatype> <NULL or NOT NULL>,
+CREATE TABLE <table_name> (
+<field1_name> <field1_datatype> <can field be NULL or NOT NULL>,
+<field2_name> <field2_datatype> <NULL or NOT NULL>,
 ...
 PRIMARY KEY (`<field_that_is_primary>`, `<field_that_is_primary>`...),
 KEY `idx_<field_used_for_index>` (<field_used_for_index>)
@@ -113,8 +115,8 @@ _msql>>_ `SHOW INDEX from <table in selected database>;` to get info on index
 
   ### Altering table schema
   * altering individual columns  
-_mysql>>_ `ALTER TABLE <table_name> MODIFY <column_name> <modified_attribute1> <modified_attribute2> ...` MODIFY changes column definition (i.e. INT (Type), NOT (NULL), NULL (Default)) but not its name  
-_NOTE: use \ to escape _ in table and column names_  
+_mysql>>_ `ALTER TABLE <table_name> MODIFY <column_name> <modified_attribute1> <modified_attribute2> ...` MODIFY changes column definition   
+(i.e. INT (Type), NOT (NULL), NULL (Default)) but not its name  
 _mysql>>_ `ALTER TABLE <table_name> RENAME COLUMN <old-name> TO <new_name>` renames column    
  
 
@@ -124,147 +126,67 @@ _mysql>>_ `ALTER TABLE <table_name> RENAME COLUMN <old-name> TO <new_name>` rena
   1. _mysql>>_ `CREATE DATABASE <database_name>` create database
   2. _mysql>>_ `exit` exit to shell 
   3. _shell>>_ `git clone <repo_link.git>` grab file
-  4. _shell>>_ `mysql -u root -p <database_name> < /root/<repo/path/to/<filename.sql>` loads file into MySQL instance  
-  _NOTE: use \ to escape _ in sql file name_  
+  4. _shell>>_ `mysql -u root -p <database_name> < /root/<repo/path/to/filename.sql>` loads file into MySQL instance  
   5. _shell>>_ `mysql -u root -p <database_name>` access MySQL database directly from shell
 
 
 <a name='load-data'></a>
-## Loading data
+## Populating tables
 [Helpful documentation!](https://dev.mysql.com/doc/refman/8.0/en/loading-tables.html)  
   
   ### Adding data manually
-  * Adding values to one column  
-  _mysql>>_ `INSERT INTO <table_name> ()` 
+  * Adding values one column at a time   
+  _mysql>>_ `INSERT INTO <table_name> VALUES(<field1>, <field2>, <field3>, ...);`  
   
-  * Adding values to multiple columns
+  * Adding values to multiple columns  
+  _mysql>>_ `INSERT INTO <table_name> VALUES(<field1>, <field2>, <field3>, ...), (<field1>, <field2>, <field3>, ...), (<field1>, <field2>, <field3>, ...)...;`  
   
   ### Loading in data
-
+  a. from github repo  
+  	1. _mysql>>_ `set global local_infile=true;` change config to allow use of infile  
+	2. _mysql>>_ `show global variables like 'local_infile';` check that config changed  
+	3. _mysql>>_ `exit` relaunch mysql with new ability enabled  
+	4. _shell>>_ `git clone <repo_link.git>` grab file  
+	5. _shell>>_ `mysql --local_infile=1 -u root -p <database_name>` open mysql shell  
+	5. _mysql>>_ `LOAD DATA LOCAL INFILE '/root/<repo/path/to/<data.infile>' INTO TABLE <table_name> FIELDS TERMINATED BY '\t';` load data  
+	_NOTE: FIELDS TERMINATED BY '\t' indicates that in infile each column is separated by tab_  
 	
-
+  b. from local txt file  
+  	1. Create txt file where each record is one line and each value is separated by tabs  
+	Ex: ```
+		Value1	Value2	Value3 \N
+		Value1	\N	Value3	Value4
+		Value1	Value2	Value3	Value4
+	    ```  
+	    _NOTE: \N indicates null values_  
+	    <br></br>
+  	2. _mysql>>_ `LOAD DATA LOCAL INFILE '<path/to/data.txt>' INTO TABLE <table_name>;`  
 	
-
-
-  * Data can be added either record by record...
-	* _mysql>>_ INSERT INTO tbl\_name () VALUES();
-		* E.g., _mysql>>_ INSERT INTO LCL\_genotypes (IID,SNPpos,rsID,Genotype) VALUES('HG02463','10:60523:T:G','rs112920234','TT');
-		
-	* _mysql>>_ INSERT INTO tbl\_name (a,b,c) VALUES(1,2,3),(4,5,6),(7,8,9);
-		* E.g., _mysql>>_ INSERT INTO LCL_genotypes (IID,SNPpos,rsID,Genotype) VALUES('HG02466','10:60523:T:G','rs112920234','TT'),('HG02563','10:60523:T:G','rs112920234','TT'),('HG02567','10:60523:T:G','rs112920234','00');
-	
-	* _mysql>>_ INSERT INTO tbl\_name SET col\_name=expr, col\_name=expr, ...
-		* E.g., _mysql>>_ INSERT INTO phenotypes SET LCL\_ID='HG02461', phenotype='Cells\_ml\_after\_3\_days', phenotypic\_value1='878000', phenotypic\_value2='732000', phenotypic\_value3='805000', phenotypic_mean='805000';
-	
-	
-  * Or in bulk (from an INFILE)
-	* _mysql>>_ LOAD DATA LOCAL INFILE '/root/Intro-to-MySQL/snp-data.infile' INTO TABLE snp FIELDS TERMINATED BY '\t';
-		
-	
-  * __WATCH OUT FOR WARNINGS!__ [_NOTE: As of MySQL version 5.7, THIS COMMAND RETURNS A FATAL ERROR AS OPPOSED TO A WARNING_] E.g., _mysql>>_ INSERT INTO LCL\_genotypes (IID,SNPpos,rsID,Genotype) VALUES('HG024638392382903957','10:60523:T:G','rs112920234','TT');
-
-		Query OK, 1 row affected, 1 warning (0.00 sec)
-		
-		mysql> show warnings;
-		+---------+------+------------------------------------------+
-		| Level   | Code | Message                                  |
-		+---------+------+------------------------------------------+
-		| Warning | 1265 | Data truncated for column 'IID' at row 1 |
-		+---------+------+------------------------------------------+
-		1 row in set (0.00 sec)
-		
-		mysql> select * from LCL_genotypes;                       
-		+------------------+--------------+-------------+----------+
-		| IID              | SNPpos       | rsID        | genotype |
-		+------------------+--------------+-------------+----------+
-		| HG02463          | 10:60523:T:G | rs112920234 | TT       |
-		| HG02463839238290 | 10:60523:T:G | rs112920234 | TT       |
-		| HG02466          | 10:60523:T:G | rs112920234 | TT       |
-		| HG02563          | 10:60523:T:G | rs112920234 | TT       |
-		| HG02567          | 10:60523:T:G | rs112920234 | 00       |
-		+------------------+--------------+-------------+----------+
-		5 rows in set (0.00 sec)
-		
-  * Also possible (obviously) to change records that already exist (either one at a time or in bunches)...
-
-		mysql> UPDATE tbl_name SET col_name=expr, col_name=expr, ... WHERE where_condition
-		E.g., UPDATE LCL_genotypes SET IID='HG0246383' WHERE IID='HG02463839238290';
-		Query OK, 1 row affected (0.00 sec)
-		Rows matched: 1  Changed: 1  Warnings: 0
-	
-		mysql> select * from LCL_genotypes;                                          
-		+-----------+--------------+-------------+----------+
-		| IID       | SNPpos       | rsID        | genotype |
-		+-----------+--------------+-------------+----------+
-		| HG02463   | 10:60523:T:G | rs112920234 | TT       |
-		| HG0246383 | 10:60523:T:G | rs112920234 | TT       |
-		| HG02466   | 10:60523:T:G | rs112920234 | TT       |
-		| HG02563   | 10:60523:T:G | rs112920234 | TT       |
-		| HG02567   | 10:60523:T:G | rs112920234 | 00       |
-		+-----------+--------------+-------------+----------+
-		5 rows in set (0.00 sec)
-	
-  * Or to remove records (either one at a time or in bunches).  [First lets look at the table contents BEFOREHAND]
-
-		mysql> select * from phenotypes;
-		+---------+-----------------------+--------------------+--------------------+-------------------+--------------------+
-		| LCL_ID  | phenotype             | phenotypic_value1  | phenotypic_value2  | phenotypic_value3 | phenotypic_mean    |
-		+---------+-----------------------+--------------------+--------------------+-------------------+--------------------+
-		| HG02461 | Cells_ml_after_3_days |  878000.0000000000 |  732000.0000000000 | 805000.0000000000 |  805000.0000000000 |
-		| HG02462 | Cells_ml_after_3_days |  742000.0000000000 |  453000.0000000000 | 348000.0000000000 |  514333.3000000000 |
-		| HG02463 | Cells_ml_after_3_days | 1200000.0000000000 | 1140000.0000000000 | 960000.0000000000 | 1100000.0000000000 |
-		+---------+-----------------------+--------------------+--------------------+-------------------+--------------------+
-		3 rows in set (0.00 sec)
-	
-  * Now remove...
-	* _mysql>_> DELETE FROM tbl\_name WHERE where\_condition; __MAKE SURE YOU SUPPLY A WHERE CLAUSE UNLESS YOU WANT TO DELETE ALL ROWS!__
-		* E.g., mysql> DELETE FROM phenotypes WHERE LCL_ID='HG02463';
-		
-		Query OK, 1 row affected (0.01 sec)
-
-  * How does it look now?
-
-		mysql> select * from phenotypes;                     
-		+---------+-----------------------+-------------------+-------------------+-------------------+-------------------+
-		| LCL_ID  | phenotype             | phenotypic_value1 | phenotypic_value2 | phenotypic_value3 | phenotypic_mean   |
-		+---------+-----------------------+-------------------+-------------------+-------------------+-------------------+
-		| HG02461 | Cells_ml_after_3_days | 878000.0000000000 | 732000.0000000000 | 805000.0000000000 | 805000.0000000000 |
-		| HG02462 | Cells_ml_after_3_days | 742000.0000000000 | 453000.0000000000 | 348000.0000000000 | 514333.3000000000 |
-		+---------+-----------------------+-------------------+-------------------+-------------------+-------------------+
-		2 rows in set (0.00 sec)		
-
-
-<a name='lab4'></a>
-## Lab 4: Adding data to your database
-
-  * First, make the necessary configuration change to allow this functionality:
+  ### Altering data values
+  * Changing records  
+  _mysql>>_ `UPDATE <table_name> SET <col_name>=<new_value>, <col_name>=<new_value>, <col_name>=<new_value>, ... WHERE <col_name>=<value_at_target_location>;`  
   
-  	_mysql>>_ set global local_infile=true;
-  		
-  	_mysql>>_ show global variables like 'local_infile';
-  		
-  		+---------------+-------+
-		| Variable_name | Value |
-		+---------------+-------+
-		| local_infile  | ON    |
-		+---------------+-------+
-		1 row in set (0.00 sec)
-		
-  * Re-launch mysql client with ability enabled from the client:
-  
-	_mysql>>_ exit
-  
-  	_shell>>_ mysql --local\_infile=1 -u root -p colab_class;
+  * Removing records  
+  _mysql>>_ `DELETE FROM <table_name>;` removes all records form table. 
+  _mysql>>_ `DELETE FROM <table_name> WHERE <col_name>=<value_at_target_location>;` removes record from one row  
 
-  * Quickly add data to three tables...
-  
-	_mysql>>_ LOAD DATA LOCAL INFILE '/root/Intro-to-MySQL/snp-data.infile' INTO TABLE snp FIELDS TERMINATED BY '\t';
-	
-	_mysql>>_ LOAD DATA LOCAL INFILE '/root/Intro-to-MySQL/lcl\_genotypes-data.infile' INTO TABLE LCL\_genotypes FIELDS TERMINATED BY '\t';
+
+## Querying records
+[Helpful Documentation here!](https://dev.mysql.com/doc/refman/8.0/en/retrieving-data.html)  
+### Return specific records
+_mysql>>_ `select * from <table_name>;` returns ALL records (NOT schema) from named table  
+_mysql>>_ `select <col_name>, <col_name>, ... from <table_name> WHERE <col_name> = <target_value>;` returns records in specific columns  
+_mysql>>_ `select * from <table_name> WHERE <col_name> LIKE 'first_few_characters%';` uses regex to query records  
+
+### Join tables
+
+### Store query results in file
+
+
 		
-	_mysql>>_ show warnings;
-	
-	_mysql>>_ LOAD DATA LOCAL INFILE '/root/Intro-to-MySQL/phenotypes-data.infile' INTO TABLE phenotypes FIELDS TERMINATED BY '\t';
+## Check for warnings
+_mysql>>_ `show warnings;`
+
 
 <a name='unit5'></a>
 ## Unit 5: Writing queries to retrieve data
