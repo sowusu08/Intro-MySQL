@@ -1,6 +1,6 @@
 Intro to MySQL 
 =====================
-
+Documentation: https://dev.mysql.com/doc/refman/8.0/en/tutorial.html  
 Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_how_to_practice_your_mysql/*  
 
 **Table of Contents**
@@ -8,7 +8,10 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 1. [Personal Linux VM](#vm)
 2. [Check structure of DBMS](#check-structure)
 3. [Access mySQL](#access-shell)
-4. [Add password to DBMS](#password)
+4. [Add password to DBMS](#password) 
+5. [Databases](#databases)
+6. [Tables](#tables)
+7. [Load data into tables](#load-data)
 
 <a name='vm'></a>
 ## Personal Linux VM
@@ -17,7 +20,6 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 
 <a name='access-shell'></a>
 ## Access MySql  
-> Documentation. How access is controlled: https://dev.mysql.com/doc/refman/8.0/en/default-privileges.html  
 
 1. __connect to VM__  
 _shell>>_ `ssh spo8@<VMhostname>`  
@@ -34,7 +36,7 @@ _shell>>_ `mysql -u root`
 <a name='check-structure'></a>
 ## Check structure of DBMS
 _mysql>>_ `status;`  for general info including current database and current user  
-_mysql>>_ `show databases;` to see available databases on server  
+_mysql>>_ `show databases;` to see available databases on server    
 
 
 <a name='password'></a>
@@ -57,59 +59,41 @@ _mysql>>_ `SET PASSWORD FOR 'root'@'localhost' = '<PASSWORD>';`
 _mysql>>_ `SELECT Host, User, plugin, authentication_string from mysql.user where User='root';`  
 
 
-## Unit 2: Databases, schema
+<a name='databases'></a>
+## Databases, schema
   * Removing or creating databases  
 _mysql>>_ `CREATE DATABASE <new_database>;` creates database  
 _mysql>>_ `DROP DATABASE <database_name>;` removes database  
 
   * Accessing databases  
 _mysql>>_ `use <database_name>;` to access a database   
-_mysql>>_ `show tables;`  to see tables in selected database  
 
-  * Viewing tables
+  * Backing up databases  
+_shell>>_ `mysqldump -p --no-data colab\_class > <file_name.sql>`  
+_NOTE: -p prompts user for password which will be hidden_
+
+
+<a name='tables'></a>
+## Tables  
+  * Accessing tables
+_mysql>>_ `show tables;` to see available tables in selected database  
 _mysql>>_ `describe <table_name>;` to display a table in selected database  
-  _Return example:_
-	_mysql>>_ describe LCL_genotypes;
+
+  _Return example:_  
 
 	| Field    | Type         | Null | Key | Default | Extra |
 	|:---------|:-------------|:-----|:----|:--------|:------|
 	| IID      | varchar(16)  | NO   | PRI | NULL    |       |
 	| SNPpos   | varchar(512) | NO   | PRI | NULL    |       |
 	| rsID     | varchar(256) | NO   | MUL | NULL    |       |
-	| genotype | varchar(512) | NO   |     | NULL    |       |
+	| genotype | varchar(512) | NO   |     | NULL    |       |  
 
-	_mysql>>_ describe phenotypes;
-
-	| Field             | Type           | Null | Key | Default | Extra |
-	|:------------------|:---------------|:-----|:----|:--------|:------|
-	| LCL\_ID            | varchar(16)    | NO   | PRI | NULL    |       |
-	| phenotype         | varchar(128)   | NO   | PRI | NULL    |       |
-	| phenotypic\_value1 | decimal(20,10) | YES  |     | NULL    |       |
-	| phenotypic\_value2 | decimal(20,10) | YES  |     | NULL    |       |
-	| phenotypic\_value3 | decimal(20,10) | YES  |     | NULL    |       |
-	| phenotypic_mean   | decimal(20,10) | YES  |     | NULL    |       |
-
-	_mysql>>_ describe snp;
-
-	| Field              | Type                | Null | Key | Default | Extra |
-	|:-------------------|:--------------------|:-----|:----|:--------|:------|
-	| rsID               | varchar(256)        | NO   | PRI | NULL    |       |
-	| Chromosome         | tinyint(3) unsigned | NO   |     | NULL    |       |
-	| Position           | int(10) unsigned    | NO   |     | NULL    |       |
-	| Allele1            | varchar(128)        | NO   |     | NULL    |       |
-	| Allele2            | varchar(128)        | NO   |     | NULL    |       |
-	| DistanceToNearGene | varchar(32)         | NO   |     | NULL    |       |
-	| Gene               | varchar(32)         | NO   |     | NULL    |       |
-	| SNPtype            | varchar(64)         | NO   |     | NULL    |       |
-
-
-<a name='unit3'></a>
-## Adding/modifying tables and indexes
-* creating table  
+  
+  * Creating tables  
 _mysql>>_ 
 ```
 CREATE TABLE `<table_name>` (
-`<field1_name>` <field1_datatype> <NULL or NOT NULL>,
+`<field1_name>` <field1_datatype> <can field be NULL or NOT NULL>,
 `<field2_name>` <field2_datatype> <NULL or NOT NULL>,
 ...
 PRIMARY KEY (`<field_that_is_primary>`, `<field_that_is_primary>`...),
@@ -117,64 +101,29 @@ KEY `idx_<field_used_for_index>` (<field_used_for_index>)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ```  
 
-* adding index  
+  * Adding index to table  
 _mysql>>_ `CREATE INDEX idx_<fieldname> ON <table_name>(<fieldname>);` creates index based on chosen field  
 
-* Looking at the syntax for creating the above tables...
+_msql>>_ `SHOW INDEX from <table in selected database>;` to get info on index  
+ 
 
-		CREATE TABLE `LCL_genotypes` (
-		`IID` varchar(16) NOT NULL,
-		`SNPpos` varchar(512) NOT NULL,
-		`rsID` varchar(256) NOT NULL,
-		`genotype` varchar(512) NOT NULL,
-		PRIMARY KEY (`IID`,`SNPpos`),
-		KEY `idx_rsID` (`rsID`)
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+## Loading DB structure/schema from external source
+  ### From github repo
+  1. _mysql>>_ `CREATE DATABASE <database_name>` create database
+  2. _mysql>>_ `exit` exit to shell 
+  3. _shell>>_ `git clone <repo_link.git>` grab file
+  4. _shell>>_ `mysql -u root -p <database_name> < /root/<repo/path/to/<filename.sql>` loads file into MySQL instance  
+  _NOTE: use \ to escape _ in sql file name_  
+  5. _shell>>_ `mysql -u root -p <database_name>` access MySQL database directly from shell
 
-		CREATE TABLE `phenotypes` (
-		`lcl_ID` varchar(16) NOT NULL,
-		`phenotype` varchar(128) NOT NULL,
-		`phenotypic_value1` decimal(20,10) DEFAULT NULL,
-		`phenotypic_value2` decimal(20,10) DEFAULT NULL,
-		`phenotypic_value3` decimal(20,10) DEFAULT NULL,
-		`phenotypic_mean` decimal(20,10) DEFAULT NULL,
-		PRIMARY KEY (`lcl_ID`,`phenotype`)
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-		
+<a name='load-data'></a>
+## Loading data
+[Click here for helpful documentation!](https://dev.mysql.com/doc/refman/8.0/en/loading-tables.html)  
 
-  * How was the "idx_rsID" index actually created?
-  
-	_mysql>>_ CREATE INDEX idx_rsID ON LCL_genotypes(rsID);
 
-		Query OK, 358244487 rows affected (2 hours 33 min 15.53 sec)
-		Records: 358244487  Deleted: 0  Skipped: 0  Warnings: 0
-  
-	_mysql>>_ SHOW INDEX from LCL_genotypes;
-
-		+---------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-		| Table         | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
-		+---------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-		| LCL_genotypes |          0 | PRIMARY  |            1 | IID         | A         |           5 |     NULL | NULL   |      | BTREE      |         |               |
-		| LCL_genotypes |          0 | PRIMARY  |            2 | SNPpos      | A         |           5 |     NULL | NULL   |      | BTREE      |         |               |
-		| LCL_genotypes |          1 | idx_rsID |            1 | rsID        | A         |           2 |     NULL | NULL   |      | BTREE      |         |               |
-		+---------------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-		3 rows in set (0.00 sec)
-
-  * A brief tangent to discuss backups! (via 'mysqldump')
-
-	_shell>>_ mysqldump -p --no-data colab\_class > COLAB\_WITHOUT\_DATA.sql	
-	
-<a name='lab2/3'></a>
-## Lab 2/3: Working with databases and tables
-
-  * Create new database and populate it...
-  
-	_mysql>>_ CREATE DATABASE colab_class;
-	
-	_mysql>>_ show databases;
-	
-	_mysql>>_ exit
+  2. _shell>>_ `mysql -u root -p colab_class < /root/Intro-to-MySQL/COLAB\_WITHOUT\_DATA.sql` loads file into MySQL instance  
+  3. _shell>>_ `mysql -u root -p <database_name>;` opens database in mySQL shell  
 
   * grab the class files from the github repository
   
