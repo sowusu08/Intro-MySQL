@@ -24,6 +24,7 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 ## Personal Linux VM
   * A brief tangent to discuss architecture: https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/client-server-architecture.pdf  
   * Manage VM: *https://vcm.duke.edu/*  
+  * power down VM from console: _vcm@vcm-XXXX:~$_ `sudo shutdown -r now`
 
 <a name='access-shell'></a>
 ## Access MySql  
@@ -179,186 +180,21 @@ _mysql>>_ `select <col_name>, <col_name>, ... from <table_name> WHERE <col_name>
 _mysql>>_ `select * from <table_name> WHERE <col_name> LIKE 'first_few_characters%';` uses regex to query records  
 
 ### Join tables
+* "JOIN" GUIDANCE:  https://stackoverflow.com/questions/6294778/mysql-quick-breakdown-of-the-types-of-joins
+* MORE "JOIN" GUIDANCE:  https://www.javatpoint.com/mysql-join  
+_mysql>>_ `SELECT <what-to-select> FROM <table1> JOIN <table2> ON <table1>.<table1_column_name> = <table2_name>.<table2_column_name>`  
+joins tables by matching values of table1_column_name and table2_column_name and only returns selected columns (aka only returns shared data for slected columns)  
 
 ### Store query results in file
-
+_mysql>>_ 
+```
+SELECT <select-statement> INTO OUTFILE '<path/to/store/file.txt>' \
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' \
+LINES TERMINATED BY '\n' \
+<JOIN-statement-if-necessary>;
+```  
+_NOTE: each column will be separated by ',' and each row by a return/enter_  
 
 		
 ## Check for warnings
 _mysql>>_ `show warnings;`
-
-
-<a name='unit5'></a>
-## Unit 5: Writing queries to retrieve data
-
-  * Simplest queries
-	
-		mysql> select * from LCL_genotypes;
-		+------------------+--------------+-------------+----------+
-		| IID              | SNPpos       | rsID        | genotype |
-		+------------------+--------------+-------------+----------+
-		| HG02463          | 10:60523:T:G | rs112920234 | TT       |
-		| HG02463839238290 | 10:60523:T:G | rs112920234 | TT       |
-		| HG02466          | 10:60523:T:G | rs112920234 | TT       |
-		| HG02563          | 10:60523:T:G | rs112920234 | TT       |
-		| HG02567          | 10:60523:T:G | rs112920234 | 00       |
-		+------------------+--------------+-------------+----------+
-		5 rows in set (0.00 sec)
-	
-		mysql> SELECT IID,rsID from LCL_genotypes WHERE genotype = 'TT';
-		+------------------+-------------+
-		| IID              | rsID        |
-		+------------------+-------------+
-		| HG02463          | rs112920234 |
-		| HG02463839238290 | rs112920234 |
-		| HG02466          | rs112920234 |
-		| HG02563          | rs112920234 |
-		+------------------+-------------+
-		4 rows in set (0.00 sec)
-	
-		mysql> SELECT COUNT(*) from snp;
-		+----------+
-		| COUNT(*) |
-		+----------+
-		|        5 |
-		+----------+
-		1 row in set (0.04 sec)
-	
-		mysql> select * from snp;
-		+-------------+------------+----------+---------+---------+----------------------+------------+------------+
-		| rsID        | Chromosome | Position | Allele1 | Allele2 | DistanceToNearGene   | Gene       | SNPtype    |
-		+-------------+------------+----------+---------+---------+----------------------+------------+------------+
-		| rs112920234 |         10 |    60523 | G       | T       | dist=NONE;dist=32305 | NONE,TUBB8 | intergenic |
-		| rs147855157 |         10 |    61372 | CA      | C       | .                    | .          | .          |
-		| rs536439816 |         10 |    61386 | A       | G       | dist=NONE;dist=31442 | NONE,TUBB8 | intergenic |
-		| rs536478188 |         10 |    60803 | G       | T       | dist=NONE;dist=32025 | NONE,TUBB8 | intergenic |
-		| rs569167217 |         10 |    60684 | C       | A       | dist=NONE;dist=32144 | NONE,TUBB8 | intergenic |
-		+-------------+------------+----------+---------+---------+----------------------+------------+------------+
-		5 rows in set (0.00 sec)
-
-  * Slightly more complex queries
-                   
-		mysql> select * from LCL_genotypes WHERE IID LIKE 'HG0246%'; 
-		+------------------+--------------+-------------+----------+
-		| IID              | SNPpos       | rsID        | genotype |
-		+------------------+--------------+-------------+----------+
-		| HG02463          | 10:60523:T:G | rs112920234 | TT       |
-		| HG02463839238290 | 10:60523:T:G | rs112920234 | TT       |
-		| HG02466          | 10:60523:T:G | rs112920234 | TT       |
-		+------------------+--------------+-------------+----------+
-		3 rows in set (0.00 sec)
-
-  * "JOIN" GUIDANCE:  https://stackoverflow.com/questions/6294778/mysql-quick-breakdown-of-the-types-of-joins
-  
-  * MORE "JOIN" GUIDANCE:  https://www.javatpoint.com/mysql-join
-  
-  * (The default "JOIN" in MySQL is an "INNER JOIN")
-  
-		mysql> SELECT * FROM LCL_genotypes JOIN snp ON LCL_genotypes.rsID = snp.rsID;
-		+------------------+--------------+-------------+----------+-------------+------------+----------+---------+---------+----------------------+------------+------------+
-		| IID              | SNPpos       | rsID        | genotype | rsID        | Chromosome | Position | Allele1 | Allele2 | DistanceToNearGene   | Gene       | SNPtype    |
-		+------------------+--------------+-------------+----------+-------------+------------+----------+---------+---------+----------------------+------------+------------+
-		| HG02463          | 10:60523:T:G | rs112920234 | TT       | rs112920234 |         10 |    60523 | G       | T       | dist=NONE;dist=32305 | NONE,TUBB8 | intergenic |
-		| HG02463839238290 | 10:60523:T:G | rs112920234 | TT       | rs112920234 |         10 |    60523 | G       | T       | dist=NONE;dist=32305 | NONE,TUBB8 | intergenic |
-		| HG02466          | 10:60523:T:G | rs112920234 | TT       | rs112920234 |         10 |    60523 | G       | T       | dist=NONE;dist=32305 | NONE,TUBB8 | intergenic |
-		| HG02563          | 10:60523:T:G | rs112920234 | TT       | rs112920234 |         10 |    60523 | G       | T       | dist=NONE;dist=32305 | NONE,TUBB8 | intergenic |
-		| HG02567          | 10:60523:T:G | rs112920234 | 00       | rs112920234 |         10 |    60523 | G       | T       | dist=NONE;dist=32305 | NONE,TUBB8 | intergenic |
-		+------------------+--------------+-------------+----------+-------------+------------+----------+---------+---------+----------------------+------------+------------+
-		5 rows in set (0.00 sec)
-		
-		mysql> SELECT IID,Position,Gene FROM LCL_genotypes JOIN snp ON LCL_genotypes.rsID = snp.rsID;
-		+------------------+----------+------------+
-		| IID              | Position | Gene       |
-		+------------------+----------+------------+
-		| HG02463          |    60523 | NONE,TUBB8 |
-		| HG02463839238290 |    60523 | NONE,TUBB8 |
-		| HG02466          |    60523 | NONE,TUBB8 |
-		| HG02563          |    60523 | NONE,TUBB8 |
-		| HG02567          |    60523 | NONE,TUBB8 |
-		+------------------+----------+------------+
-		5 rows in set (0.00 sec)
-
-		mysql> SELECT IID,Position,Gene FROM LCL_genotypes JOIN snp ON LCL_genotypes.rsID = snp.rsID where LCL_genotypes.rsID = 'rs536478188';
-		Empty set (0.00 sec)
-
-		mysql> SELECT IID,Position,Gene FROM LCL_genotypes JOIN snp ON LCL_genotypes.rsID = snp.rsID where snp.rsID = 'rs536478188';
-		Empty set (0.00 sec)
-		
-		mysql> SELECT IID,Position,Gene FROM LCL_genotypes JOIN snp ON LCL_genotypes.rsID = snp.rsID where IID = 'HG02466';
-		+---------+----------+------------+
-		| IID     | Position | Gene       |
-		+---------+----------+------------+
-		| HG02466 |    60523 | NONE,TUBB8 |
-		+---------+----------+------------+
-		1 row in set (0.00 sec)
-
-  * What if I want the output to go directly into a file instead of to the screen?
-	
-		mysql> SELECT * INTO OUTFILE '/var/lib/mysql-files/colab_class_result.txt' \
-		         FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' \
-		         LINES TERMINATED BY '\n' \
-		         FROM LCL_genotypes JOIN snp ON LCL_genotypes.rsID = snp.rsID;
-		Query OK, 5 rows affected (0.00 sec)
-
-		mysql> SELECT IID,Position,Gene INTO OUTFILE '/var/lib/mysql-files/colab_class_result2.txt' \
-		         FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '' ESCAPED BY '' \
-		         LINES TERMINATED BY '\n' \
-		         FROM LCL_genotypes JOIN snp ON LCL_genotypes.rsID = snp.rsID;
-		Query OK, 5 rows affected (0.00 sec)
-		
-		mysql> exit
-		Bye
-		root@vcm-XXXX:~$ cat /var/lib/mysql-files/colab_class_result.txt
-		"HG02463","10:60523:T:G","rs112920234","TT","rs112920234",10,60523,"G","T","dist=NONE;dist=32305","NONE,TUBB8","intergenic"
-		"HG02463839238290","10:60523:T:G","rs112920234","TT","rs112920234",10,60523,"G","T","dist=NONE;dist=32305","NONE,TUBB8","intergenic"
-		"HG02466","10:60523:T:G","rs112920234","TT","rs112920234",10,60523,"G","T","dist=NONE;dist=32305","NONE,TUBB8","intergenic"
-		"HG02563","10:60523:T:G","rs112920234","TT","rs112920234",10,60523,"G","T","dist=NONE;dist=32305","NONE,TUBB8","intergenic"
-		"HG02567","10:60523:T:G","rs112920234","00","rs112920234",10,60523,"G","T","dist=NONE;dist=32305","NONE,TUBB8","intergenic"
-
-		root@vcm-XXXX:~$ cat /var/lib/mysql-files/colab_class_result2.txt
-		HG02463	60523	NONE,TUBB8
-		HG02463839238290	60523	NONE,TUBB8
-		HG02466	60523	NONE,TUBB8
-		HG02563	60523	NONE,TUBB8
-		HG02567	60523	NONE,TUBB8
-	
-
-<a name='lab5'></a>
-## Lab 5: Practice with INSERT, UPDATE, DELETE, and SELECT (with JOIN!)
-
-  * Take some time to play around with queries we've talked about above...
-
-<a name='unit6'></a>
-## Unit 6: Useful ancillary information
-
-  * please note that VCM VMs now default to powering down every morning at 06:00 am, so if you can't connect (starting tomorrow), the first thing to do is to login to https://vcm.duke.edu to verify that your VM is actually powered on.
-
-  * sudo -- allows certain commands to be run with elevated privileges.  First, without:
-
-		vcm@vcm-XXXX:~$ service mysql restart
-		==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
-		Authentication is required to restart 'mysql.service'.
-		Authenticating as: root
-		Password:
-	
-  * And now, with:
-
-		vcm@vcm-XXXX:~$ sudo service mysql restart
-		vcm@vcm-XXXX:~$ ps -aef | grep mysql 
-
-  * To REBOOT the server itself: _note that this can also be done from the VCM webUI via "Power off" and then "Power on"_
-
-		vcm@vcm-XXXX:~$ sudo shutdown -r now
-		Connection to vcm-XXXX.vm.duke.edu closed by remote host.
-		Connection to vcm-XXXX.vm.duke.edu closed
-	
-  * To change the configuration of the MySQL server, edit the "my.cnf" file __AND THEN RESTART THE mysql PROCESS!!__
-
-		vcm@vcm-XXXX:~$ sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
-			[making necessary edits to the file and saving them]
-		vcm@vcm-XXXX:~$ sudo service mysql restart
-	
-  * To check the error log, use "cat" (or "more" or "less"...)
-
-		vcm@vcm-XXXX:~$ sudo cat /var/log/mysql/error.log
-	
