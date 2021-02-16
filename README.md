@@ -34,7 +34,7 @@ _shell>>_ `ssh NetID@<VMhostname>`
 _shell>>_ `<NetID pswd>`
 
 2. __open MySql shell__  
-_shell>>_ `sudo -i`  
+_shell>>_ `sudo -i` opens "super user" (root) prompt  
 _shell>>_ `mysql -u root`  
 
 * _If error install mysql first:_  
