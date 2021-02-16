@@ -10,8 +10,13 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 3. [Access mySQL](#access-shell)
 4. [Add password to DBMS](#password) 
 5. [Databases](#databases)
-6. [Tables](#tables)
-7. [Load data into tables](#load-data)
+6. [Tables](#tables)  
+	* [Accessing tables](#acessing-tables)  
+	* [Creating tables](#creating-tables)  
+	* [Adding index](#adding-index-to-table)  
+	* [Altering tables](#altering-table-schema)
+7. [Load database structure](#load-schema)
+8. [Load data into tables](#load-data)
 
 <a name='vm'></a>
 ## Personal Linux VM
@@ -69,13 +74,13 @@ _mysql>>_ `DROP DATABASE <database_name>;` removes database
 _mysql>>_ `use <database_name>;` to access a database   
 
   * Backing up databases  
-_shell>>_ `mysqldump -p --no-data colab\_class > <file_name.sql>`  
+_shell>>_ `mysqldump -p --no-data <database_name> > <file_name.sql>` --no-data doesn't include data in backup  
 _NOTE: -p prompts user for password which will be hidden_
 
 
 <a name='tables'></a>
 ## Tables  
-  * Accessing tables
+  ### Accessing tables
 _mysql>>_ `show tables;` to see available tables in selected database  
 _mysql>>_ `describe <table_name>;` to display a table in selected database  
 
@@ -89,7 +94,7 @@ _mysql>>_ `describe <table_name>;` to display a table in selected database
 	| genotype | varchar(512) | NO   |     | NULL    |       |  
 
   
-  * Creating tables  
+  ### Creating tables  
 _mysql>>_ 
 ```
 CREATE TABLE `<table_name>` (
@@ -101,12 +106,19 @@ KEY `idx_<field_used_for_index>` (<field_used_for_index>)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ```  
 
-  * Adding index to table  
+  ### Adding index to table  
 _mysql>>_ `CREATE INDEX idx_<fieldname> ON <table_name>(<fieldname>);` creates index based on chosen field  
 
 _msql>>_ `SHOW INDEX from <table in selected database>;` to get info on index  
+
+  ### Altering table schema
+  * altering individual columns  
+_mysql>>_ `ALTER TABLE <table_name> MODIFY <column_name> <modified_attribute1> <modified_attribute2> ...` MODIFY changes column definition (i.e. INT (Type), NOT (NULL), NULL (Default)) but not its name  
+_NOTE: use \ to escape _ in table and column names_  
+_mysql>>_ `ALTER TABLE <table_name> RENAME COLUMN <old-name> TO <new_name>` renames column    
  
 
+<a name='load-schema'></a>
 ## Loading DB structure/schema from external source
   ### From github repo
   1. _mysql>>_ `CREATE DATABASE <database_name>` create database
@@ -119,48 +131,20 @@ _msql>>_ `SHOW INDEX from <table in selected database>;` to get info on index
 
 <a name='load-data'></a>
 ## Loading data
-[Click here for helpful documentation!](https://dev.mysql.com/doc/refman/8.0/en/loading-tables.html)  
-
-
-  2. _shell>>_ `mysql -u root -p colab_class < /root/Intro-to-MySQL/COLAB\_WITHOUT\_DATA.sql` loads file into MySQL instance  
-  3. _shell>>_ `mysql -u root -p <database_name>;` opens database in mySQL shell  
-
-  * grab the class files from the github repository
+[Helpful documentation!](https://dev.mysql.com/doc/refman/8.0/en/loading-tables.html)  
   
-	_shell>>_ git clone https://github.com/LinuxAtDuke/Intro-to-MySQL.git
+  ### Adding data manually
+  * Adding values to one column  
+  _mysql>>_ `INSERT INTO <table_name> ()` 
+  
+  * Adding values to multiple columns
+  
+  ### Loading in data
 
-  * load the file into your MySQL instance
 	
-	_shell>>_ mysql -u root -p colab\_class < /root/Intro-to-MySQL/COLAB\_WITHOUT\_DATA.sql
+
 	
-  * now check out the results of the import
-	
-	_shell>>_ mysql -u root -p colab_class;
-	
-	_mysql>>_ show tables;
-	
-	_mysql>>_ DESCRIBE LCL_genotypes;
-	
-  * now manually modify the table schema
-	
-	_mysql>>_ ALTER TABLE LCL_genotypes MODIFY genotype VARCHAR(2048) NOT NULL;
-	
-	_mysql>>_ ALTER TABLE LCL_genotypes MODIFY SNPpos VARCHAR(767) NOT NULL;
-	
-	_mysql>>_ DESCRIBE LCL_genotypes;
-		
-		[take note of how this output looks different than it did before]
-	
-	_mysql>>_ DESCRIBE gwas_results;
-	
-	_mysql>>_ ALTER TABLE gwas\_results MODIFY study\_population VARCHAR(16) NOT NULL;
-		
-	_mysql>>_ DESCRIBE gwas_results;
-		
-		[take note of how this output looks different than it did before]
-	
-<a name='unit4'></a>
-## Unit 4: Populating database with data
+
 
   * Data can be added either record by record...
 	* _mysql>>_ INSERT INTO tbl\_name () VALUES();
