@@ -101,8 +101,8 @@ _mysql>>_ `describe <table_name>;` to display a table in selected database
 _mysql>>_ 
 ```
 CREATE TABLE <table_name> (
-<field1_name> <field1_datatype> <can field be NULL or NOT NULL>,
-<field2_name> <field2_datatype> <NULL or NOT NULL>,
+<field1_name> <field1_datatype> <can field be NULL or NOT> <field is NULL by default>,
+<field2_name> <field2_datatype> <NULL or NOT> <NULL>,
 ...
 PRIMARY KEY (`<field_that_is_primary>`, `<field_that_is_primary>`...),
 KEY `idx_<field_used_for_index>` (<field_used_for_index>)
