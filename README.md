@@ -108,8 +108,6 @@ PRIMARY KEY (`<field_that_is_primary>`, `<field_that_is_primary>`...),
 KEY `idx_<field_used_for_index>` (<field_used_for_index>)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ```  
-* PRIMARY KEYS are attributes which must be unique in a table  
-* KEY is which attribute will serve as overall, general index
 
   ### Adding index to table  
 _mysql>>_ `CREATE INDEX idx_<fieldname> ON <table_name>(<fieldname>);` creates index based on chosen field  
