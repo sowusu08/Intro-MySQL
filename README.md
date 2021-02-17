@@ -101,8 +101,8 @@ _mysql>>_ `describe <table_name>;` to display a table in selected database
 _mysql>>_ 
 ```
 CREATE TABLE <table_name> (
-<field1_name> <field1_datatype> <can field be NULL or NOT> <field is NULL by default>,
-<field2_name> <field2_datatype> <NULL or NOT> <NULL>,
+<field1_name> <field1_datatype> <can field be NULL or NOT NULL>,
+<field2_name> <field2_datatype> <NULL or NOT NULL>,
 ...
 PRIMARY KEY (`<field_that_is_primary>`, `<field_that_is_primary>`...),
 KEY `idx_<field_used_for_index>` (<field_used_for_index>)
@@ -117,7 +117,7 @@ _msql>>_ `SHOW INDEX from <table in selected database>;` to get info on index
   ### Altering table schema
   * altering individual columns  
 _mysql>>_ `ALTER TABLE <table_name> MODIFY <column_name> <modified_attribute1> <modified_attribute2> ...` MODIFY changes column definition   
-(i.e. INT (Type), NOT (NULL), NULL (Default)) but not its name  
+(i.e. INT (Type), NOT NULL (field is not optional)) but not its name  
 _mysql>>_ `ALTER TABLE <table_name> RENAME COLUMN <old-name> TO <new_name>` renames column    
  
 
