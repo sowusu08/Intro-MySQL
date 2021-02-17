@@ -19,7 +19,7 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 7. [Load database structure](#load-schema)
 8. [Populate tables](#load-data)  
 	* [Manually](#adding-data-manually)  
-	* [Loading int data](#loading-in-data)
+	* [Loading in data](#loading-in-data)
 10. [Querying records](#querying-records)  
 11. [Check for warnings](#check-for-warnings)
 
