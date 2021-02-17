@@ -124,13 +124,30 @@ _mysql>>_ `ALTER TABLE <table_name> MODIFY <column_name> <modified_attribute1> <
 (i.e. INT (Type), NOT NULL (field is not optional)) but not its name  
 _mysql>>_ `ALTER TABLE <table_name> RENAME COLUMN <old-name> TO <new_name>` renames column    
 
-  * adding new column  
-_mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <type> <NULL | NOT NULL>;`  
+  * adding and dropping columns    
+_mysql>>_ `ALTER TABLE <table_name> ADD <new_column_name> <type> <NULL | NOT NULL>;`  
+_mysql>>_ `ALTER TABLE <table_name> DROP <old_column_name>;`  
 
-  * adding and removing MUL Key
-_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <index_name>;` removes MUL key where <index_name> is NOT Field name  
-_mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds MUL key  
- 
+  * changing column order  
+  after dropping column...  
+_mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <column_definition> FIRST;` puts column first  
+_mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <column_definition> AFTER <column_name>;` puts column after another column  
+
+  * adding keys  
+_mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds non-unique index (key)  
+_mysql>>_ `ALTER TABLE <table_name> ADD PRIMARY KEY (<field_name>, <if_desired_field2_name>);` adds Primary keys 
+_mysql>>_ `ALTER TABLE <table_name> ADD UNIQUE KEY (<field_name>, <if_desired_field2_name>);` adds Unique keys  
+_NOTE: Primary Key can not have empty field in data file therefore if using auto_increment   
+use a Unique Key (can take empty fields in data file which it will auto fill)_  
+
+_NOTE: can also add unique and primary keys through new column defintion:_    
+_mysql>>_ `ALTER TABLE <table_name> ADD COLUMN <column_name> <column_definition> UNIQUE KEY;` adds Unique key  
+
+  * removing keys  
+_mysql>>_ `ALTER TABLE <table_name> DROP PRIMARY KEY (<field_name>);` removes ALL Primary keys  
+_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <index_name>;` removes adds non-unique index (key) where <index_name> is NOT Field name  
+_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <field_name>;` removes Unique key  
+
 
 <a name='load-schema'></a>
 ## Loading DB structure/schema from external source
