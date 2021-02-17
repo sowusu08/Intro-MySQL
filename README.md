@@ -14,7 +14,7 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 	* [Accessing tables](#acessing-tables)  
 	* [Creating tables](#creating-tables)  
 	* [Deleting table](#delete-table)  
-	* [Adding index](#adding-index-to-table)  
+	* [Indexes/Keys](#keys)  
 	* [Altering tables](#altering-table-schema)
 7. [Load database structure](#load-schema)
 8. [Populate tables](#load-data)  
@@ -115,10 +115,22 @@ KEY `idx_<field_used_for_index>` (<field_used_for_index>)
   ### Deleting tables
   _mysql>>_ `DROP TABLE <table_name>;`
 
-  ### Adding index to table  
-_mysql>>_ `CREATE INDEX idx_<fieldname> ON <table_name>(<fieldname>);` creates index based on chosen field  
+  ### Keys  
+* adding keys  
+_mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds non-unique index (key)  
+_mysql>>_ `ALTER TABLE <table_name> ADD PRIMARY KEY (<field_name>, <if_desired_field2_name>);` adds Primary keys 
+_mysql>>_ `ALTER TABLE <table_name> ADD UNIQUE KEY (<field_name>, <if_desired_field2_name>);` adds Unique keys    
 
-_msql>>_ `SHOW INDEX from <table in selected database>;` to get info on index  
+_NOTE: can also add unique and primary keys through new column defintion:_    
+_mysql>>_ `ALTER TABLE <table_name> ADD COLUMN <column_name> <column_definition> UNIQUE KEY;` adds Unique key  
+
+* removing keys  
+_mysql>>_ `ALTER TABLE <table_name> DROP PRIMARY KEY (<field_name>);` removes ALL Primary keys  
+_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <index_name>;` removes adds non-unique index (key) where <index_name> is NOT Field name  
+_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <field_name>;` removes Unique key  
+
+* to get info on index  
+_msql>>_ `SHOW INDEX from <table in selected database>;`  
 
   ### Altering table schema
   * altering individual columns  
@@ -133,20 +145,7 @@ _mysql>>_ `ALTER TABLE <table_name> DROP <old_column_name>;`
   * changing column order  
   after dropping column...  
 _mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <column_definition> FIRST;` puts column first  
-_mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <column_definition> AFTER <column_name>;` puts column after another column  
-
-  * adding keys  
-_mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds non-unique index (key)  
-_mysql>>_ `ALTER TABLE <table_name> ADD PRIMARY KEY (<field_name>, <if_desired_field2_name>);` adds Primary keys 
-_mysql>>_ `ALTER TABLE <table_name> ADD UNIQUE KEY (<field_name>, <if_desired_field2_name>);` adds Unique keys    
-
-_NOTE: can also add unique and primary keys through new column defintion:_    
-_mysql>>_ `ALTER TABLE <table_name> ADD COLUMN <column_name> <column_definition> UNIQUE KEY;` adds Unique key  
-
-  * removing keys  
-_mysql>>_ `ALTER TABLE <table_name> DROP PRIMARY KEY (<field_name>);` removes ALL Primary keys  
-_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <index_name>;` removes adds non-unique index (key) where <index_name> is NOT Field name  
-_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <field_name>;` removes Unique key  
+_mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <column_definition> AFTER <column_name>;` puts column after another column    
 
 
 <a name='load-schema'></a>
