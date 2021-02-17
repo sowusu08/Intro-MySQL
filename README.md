@@ -170,11 +170,10 @@ _mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds
 	
   b. from local txt file  
   	1. Create txt file where each record is one line and each value is separated by tabs  
-	Ex: ```
-		Value1	Value2	Value3 \N
-		Value1	\N	Value3	Value4
-		Value1	Value2	Value3	Value4
-	    ```  
+	Ex:  
+	Value1	Value2	Value3 \N   
+	Value1	\N	Value3	Value4  
+	Value1	Value2	Value3	Value4  
 	    _NOTE: \N indicates null values_  
 	    <br></br>
   	2. _mysql>>_ `LOAD DATA LOCAL INFILE '<path/to/data.txt>' INTO TABLE <table_name>;`  
