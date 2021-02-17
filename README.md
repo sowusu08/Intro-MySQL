@@ -13,6 +13,7 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 6. [Tables](#tables)  
 	* [Accessing tables](#acessing-tables)  
 	* [Creating tables](#creating-tables)  
+	* [Deleting table](#delete-table)  
 	* [Adding index](#adding-index-to-table)  
 	* [Altering tables](#altering-table-schema)
 7. [Load database structure](#load-schema)
@@ -108,6 +109,9 @@ PRIMARY KEY (`<field_that_is_primary>`, `<field_that_is_primary>`...),
 KEY `idx_<field_used_for_index>` (<field_used_for_index>)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ```  
+<a name='delete-table'></a>
+  ### Deleting tables
+  _mysql>>_ `DROP TABLE <table_name>`
 
   ### Adding index to table  
 _mysql>>_ `CREATE INDEX idx_<fieldname> ON <table_name>(<fieldname>);` creates index based on chosen field  
