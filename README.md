@@ -111,7 +111,7 @@ KEY `idx_<field_used_for_index>` (<field_used_for_index>)
 ```  
 <a name='delete-table'></a>
   ### Deleting tables
-  _mysql>>_ `DROP TABLE <table_name>`
+  _mysql>>_ `DROP TABLE <table_name>;`
 
   ### Adding index to table  
 _mysql>>_ `CREATE INDEX idx_<fieldname> ON <table_name>(<fieldname>);` creates index based on chosen field  
