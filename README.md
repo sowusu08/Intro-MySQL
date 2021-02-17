@@ -118,7 +118,7 @@ KEY `idx_<field_used_for_index>` (<field_used_for_index>)
   ### Keys  
 * adding keys  
 _mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds non-unique index (key)  
-_mysql>>_ `ALTER TABLE <table_name> ADD PRIMARY KEY (<field_name>, <if_desired_field2_name>);` adds Primary keys 
+_mysql>>_ `ALTER TABLE <table_name> ADD PRIMARY KEY (<field_name>, <if_desired_field2_name>);` adds Primary keys  
 _mysql>>_ `ALTER TABLE <table_name> ADD UNIQUE KEY (<field_name>, <if_desired_field2_name>);` adds Unique keys    
 
 _NOTE: can also add unique and primary keys through new column defintion:_    
