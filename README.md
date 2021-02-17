@@ -123,6 +123,13 @@ _msql>>_ `SHOW INDEX from <table in selected database>;` to get info on index
 _mysql>>_ `ALTER TABLE <table_name> MODIFY <column_name> <modified_attribute1> <modified_attribute2> ...` MODIFY changes column definition   
 (i.e. INT (Type), NOT NULL (field is not optional)) but not its name  
 _mysql>>_ `ALTER TABLE <table_name> RENAME COLUMN <old-name> TO <new_name>` renames column    
+
+  * adding new column  
+_mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <type> <NULL | NOT NULL>;`  
+
+  * adding and removing MUL Key
+_mysql>>_ `ALTER TABLE <table_name> DROP INDEX <index_name>;` removes MUL key where <index_name> is NOT Field name  
+_mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds MUL key  
  
 
 <a name='load-schema'></a>
