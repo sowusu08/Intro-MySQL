@@ -128,7 +128,12 @@ _mysql>>_ `ALTER TABLE <table_name> RENAME COLUMN <old-name> TO <new_name>` rena
   2. _mysql>>_ `exit` exit to shell 
   3. _shell>>_ `git clone <repo_link.git>` grab file
   4. _shell>>_ `mysql -u root -p <database_name> < /root/<repo/path/to/filename.sql>` loads file into MySQL instance  
-  5. _shell>>_ `mysql -u root -p <database_name>` access MySQL database directly from shell
+  5. _shell>>_ `mysql -u root -p <database_name>` access MySQL database directly from shell  
+
+  ### From local .sql file
+  1. _mysql>>_ `CREATE DATABASE <database_name>` create database  
+  2. _shell>>_ `mysql -u root -p <database_name> < </local/path/to/file.sql>` loads file into MySQL instance  
+
 
 
 <a name='load-data'></a>
