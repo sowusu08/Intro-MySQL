@@ -18,14 +18,16 @@ Practice: *https://www.reddit.com/r/SQL/comments/b5pbij/any_recommendation_of_ho
 	* [Altering tables](#altering-table-schema)
 7. [Load database structure](#load-schema)
 8. [Populate tables](#load-data)  
-9. [Querying records](#querying-records)  
-10. [Check for warnings](#check-for-warnings)
+	* [Manually](#adding-data-manually)  
+	* [Loading int data](#loading-in-data)
+10. [Querying records](#querying-records)  
+11. [Check for warnings](#check-for-warnings)
 
 <a name='vm'></a>
 ## Personal Linux VM
   * A brief tangent to discuss architecture: https://github.com/LinuxAtDuke/Intro-to-MySQL/blob/master/client-server-architecture.pdf  
   * Manage VM: *https://vcm.duke.edu/*  
-  * power down VM from console: _vcm@vcm-XXXX:~$_ `sudo shutdown -r now`
+  * disconnect terminal from VM: _vcm@vcm-XXXX:~$_ `sudo shutdown -r now`
 
 <a name='access-shell'></a>
 ## Access MySql  
@@ -136,9 +138,7 @@ _mysql>>_ `ALTER TABLE <table_name> ADD <column_name> <column_definition> AFTER 
   * adding keys  
 _mysql>>_ `ALTER TABLE <table_name> ADD INDEX <index_name> (<field_name>);` adds non-unique index (key)  
 _mysql>>_ `ALTER TABLE <table_name> ADD PRIMARY KEY (<field_name>, <if_desired_field2_name>);` adds Primary keys 
-_mysql>>_ `ALTER TABLE <table_name> ADD UNIQUE KEY (<field_name>, <if_desired_field2_name>);` adds Unique keys  
-_NOTE: Primary Key can not have empty field in data file therefore if using auto_increment   
-use a Unique Key (can take empty fields in data file which it will auto fill)_  
+_mysql>>_ `ALTER TABLE <table_name> ADD UNIQUE KEY (<field_name>, <if_desired_field2_name>);` adds Unique keys    
 
 _NOTE: can also add unique and primary keys through new column defintion:_    
 _mysql>>_ `ALTER TABLE <table_name> ADD COLUMN <column_name> <column_definition> UNIQUE KEY;` adds Unique key  
@@ -187,13 +187,13 @@ _mysql>>_ `ALTER TABLE <table_name> DROP INDEX <field_name>;` removes Unique key
 	
   b. from local txt file  
   	1. Create txt file where each record is one line and each value is separated by tabs  
-	Ex:  
-	Value1	Value2	Value3 \N   
-	Value1	\N	Value3	Value4  
-	Value1	Value2	Value3	Value4  
-	    _NOTE: \N indicates null values_  
-	    <br></br>
-  	2. _mysql>>_ `LOAD DATA LOCAL INFILE '<path/to/data.txt>' INTO TABLE <table_name>;`  
+		Value1	Value2 	Value3 	\N   
+		Value1	\N	Value3	Value4  
+		Value1	Value2	Value3	Value4  
+	 _NOTE: \N indicates null values_  
+	 2. _mysql>>_ `LOAD DATA LOCAL INFILE '<path/to/data.txt>' INTO TABLE <table_name>;`  
+	 _NOTE: Primary Key can not have empty field in data file therefore if using auto_increment   
+	 use a Unique Key (can take empty fields in data file which it will auto fill)_
 	
   ### Altering data values
   * Changing records  
